@@ -1,18 +1,15 @@
 let loginDiv = document.getElementById('login')
-let citySelectDiv = document.getElementById('select_city')
 let selections = document.getElementById('selections')
+let loginButton = document.querySelector('#login-button')
+let neighborhoodList = document.getElementById('neighborhood-list')
+let cuisineList = document.getElementById('cuisine-list')
 
-loginDiv.addEventListener('submit', handleLoginSubmit)
-citySelectDiv.addEventListener('submit', handleCitySubmit)
+window.onload = (event) => {
+  openLoginForm()
+  fetchNeighborhoodList()
+}
 
-loginDiv.innerHTML += `
-  <h3>Welcome!</h3>
-  <form action="/home">
-    <input type="text" name="" id="login_name" placeholder='enter name'>
-    <button type="submit">Enter</button>
-  </form>
-`
-
+loginButton.addEventListener('click', handleLogin)
 
 function handleLoginSubmit(e) {
   e.preventDefault()
@@ -23,7 +20,7 @@ function handleLoginSubmit(e) {
       "Content-Type": "application/json",
       "Accept": "application/json"
     },
-    body: JSON.stringify(
+    body: JSONify(
       {
         name: loginName
       }
@@ -40,17 +37,69 @@ function handleLoginSubmit(e) {
 
 function renderMainPage(user) {
   loginDiv.remove()
-  citySelectDiv.innerHTML += `
+  selections.innerHTML += `
   <form action="/home">
-    <input type="text" name="" id="login_name" placeholder='enter city'>
+    <input type="text" name="" id="city_name" placeholder='enter city'>
     <button type="submit">Enter</button>
   </form>
 `
 }
 
-function handleCitySubmit (e) {
-  citySelectDiv.innerHTML = ''
-  selections.innerHTML += `
-    
-  `
+
+function openLoginForm(){
+  document.body.classList.add("showLoginForm");
+}
+function closeLoginForm(){
+  document.body.classList.remove("showLoginForm");
+}
+
+function handleLogin(e) {
+  closeLoginForm()
+  let name = e.target.parentElement.previousElementSibling.children[1].value
+}
+
+function fetchNeighborhoodList (){
+  
+  fetch('http://localhost:3000/neighborhoods')
+  .then(function(resp){
+    return resp.json()
+  })
+  .then(function(neighborhoods){
+    console.log(neighborhoods)
+    populateNeighborhoodList(neighborhoods)
+  })
+  
+ 
+}
+
+function populateNeighborhoodList(neighborhoods) {
+  neighborhoods.forEach(function(neighborhood){
+    neighborhoodList.innerHTML += `
+      <h4>${neighborhood.name}</h4>
+    `
+  })
+}
+
+function fetchCuisineList (){
+  
+  fetch('http://localhost:3000/cuisines')
+  .then(function(resp){
+    return resp.json()
+  })
+  .then(function(cuisines){
+    console.log(cuisines)
+    populateCuisineList(cuisines)
+  })
+  
+ 
+}
+
+function populateCuisineList(cuisines) {
+  
+  cuisines.forEach(function(cuisine){
+    cuisineList.innerHTML += `
+      <h4>${Cuisine.name}</h4>
+    `
+  })
+
 }

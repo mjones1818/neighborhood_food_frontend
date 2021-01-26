@@ -3,18 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
   <script defer type="text/javascript" src="./index.js"></script>
-  <title>Document</title>
+  <script src="../slot_machine/node_modules/jquery-slotmachine/dist/slotmachine.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  
+  <title>Neighborhood Food</title>
 </head>
 <body>
-  <div id='login'>
+  <div class="center">
+  </div>
+  <div class="popup-overlay"></div>
+  <div class="popup">
+    <div class="popup-close" onclick="closeLoginForm()">&times;</div>
+    <div class="form">
+      <div class="avatar">
+        <img src="https://lh3.googleusercontent.com/proxy/0aWyD7PaItqhWfSTRe-0MciVoW-AGMPW9RpoXCLp96K5OJUPlnC2mT0KKkRqmigHDZjYSoF0x5uH6MLIl1nP92c_zTSr9uE" alt="">
+      </div>
+      <div class="header">
+        Login
+      </div>
+      <div class="element">
+        <label for="username">Name</label>
+        <input type="text" id="name">
+      </div>
 
+      <div class="element">
+        <button id='login-button'>Login</button>
+      </div>
+    </div>
   </div>
-  <div id='select_city'>
-  </div>
-  <div id='selections'>
 
+  <div id='logo'></div>
+  <div id='neighborhood'></div>
+  <div id='cuisine'></div>
+  <div id='restaurants'></div>
+  <div class='row'>
+    <div class='col-sm-4'>
+      <div id='neighborhood-list'>
+
+      </div>
+    </div>
+    <div class='col-sm-4'>
+      <div id='cuisine-list'>
+
+      </div>
+    </div>
   </div>
+
 </body>
 </html>
 
