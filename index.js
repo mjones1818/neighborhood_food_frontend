@@ -130,5 +130,15 @@ function populateRestaurantList(restaurants)  {
 
 
 function handleRestaurantSelection(e) {
-  debugger
+  document.body.innerHTML += `
+  <div class="center">
+  </div>
+  <div class="popup-overlay"></div>
+  <div class="popup">
+  <p>I'm baby organic pork belly tofu venmo, roof party seitan artisan portland. Sriracha typewriter microdosing truffaut. Food truck kale chips bitters, locavore stumptown fashion axe +1 snackwave. Hell of adaptogen bicycle rights man bun, craft beer +1 typewriter vinyl williamsburg four loko gentrify. You probably haven't heard of them tumblr tote bag photo booth tacos chicharrones quinoa microdosing wayfarers intelligentsia fashion axe poke pinterest tofu disrupt.
+
+  Meggings letterpress listicle woke godard. You probably haven't heard of them affogato cloud bread, readymade brooklyn waistcoat viral. Try-hard pop-up live-edge, umami cray crucifix coloring book. Meh tattooed cornhole flannel keytar offal adaptogen lomo photo booth synth schlitz.</p>
+  </div>
+  `
+  // openLoginForm()
 }
