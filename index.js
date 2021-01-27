@@ -24,9 +24,9 @@ loginName.addEventListener('keyup', function(event){
     handleLoginSubmit()
   }
 })
+restaurantResults.addEventListener('click', handleRestaurantSelection)
 
 function handleLoginSubmit(e) {
-  debugger
   fetch('http://localhost:3000/users',{
     method: 'POST',
     headers: {
@@ -47,17 +47,6 @@ function handleLoginSubmit(e) {
     document.body.classList.remove("showLoginForm");
   })
 }
-
-// function renderMainPage(user) {
-//   loginDiv.remove()
-//   selections.innerHTML += `
-//   <form action="/home">
-//     <input type="text" name="" id="city_name" placeholder='enter city'>
-//     <button type="submit">Enter</button>
-//   </form>
-// `
-// }
-
 
 function openLoginForm(){
   document.body.classList.add("showLoginForm");
@@ -130,7 +119,16 @@ function populateRestaurantList(restaurants)  {
   restaurantResults.innerHTML = ''
   restaurants.forEach(function(restaurant){
     restaurantResults.innerHTML += `
-      <h3>${restaurant.restaurant.name}</h3?
+      <div data-id=>
+        <h3>${restaurant.restaurant.name}</h3>
+        <p>Average cost for two people: $${restaurant.restaurant.average_cost_for_two}</p>
+        Rating: ${restaurant.restaurant.user_rating.aggregate_rating}
+      </div>
     `
   })
+}
+
+
+function handleRestaurantSelection(e) {
+  debugger
 }

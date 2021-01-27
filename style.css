@@ -139,3 +139,20 @@ body.showLoginForm .popup {
     background-size: contain;
 }
 
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 10px;
+}
+.grid > div {
+  background: #B3ddf2;
+  padding: 1.5rem;
+  border-radius: 1rem;
+}
+body {
+  margin: 2rem;
+  font: 12px system-ui;
+}
+.visited {
+  background: rgb(230, 25, 56) !important;
+}
