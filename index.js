@@ -6,7 +6,8 @@ let cuisineList = document.getElementById('cuisine-list')
 let cuisinesDropdown = document.getElementById('cuisines')
 let loginName = document.getElementById('name')
 let neighborhoodsDropdown = document.getElementById('neighborhoods')
-let restaurantSearch = document.getElementById('restaurantSearch')
+let restaurantSearch = document.getElementById('restaurant-search')
+let restaurantResults = document.getElementById('restaurant-results')
 let cuisinesArray = [] 
 // let wordlist = cuisinesArray
 
@@ -15,7 +16,7 @@ openLoginForm()
 fetchNeighborhoodList()
 fetchCuisineList()
 
-restaurantSearch.addEventListener('submit', fetchRestaurants)
+restaurantSearch.addEventListener('click', fetchRestaurants)
 loginButton.addEventListener('click', handleLogin)
 loginName.addEventListener('keyup', function(event){
   if (event.key == 'Enter') {
@@ -23,51 +24,50 @@ loginName.addEventListener('keyup', function(event){
   }
 })
 
-function handleLoginSubmit(e) {
-  e.preventDefault()
-  let loginName = e.target.children[0].value
-  fetch('http://localhost:3000/users',{
-    method: 'POST',
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    },
-    body: JSONify(
-      {
-        name: loginName
-      }
-    )
-  })
-  .then(function(resp){
-    return resp.json()
-  })
-  .then(function(user){
-    console.log(user)
-    renderMainPage(user)
-  })
-}
+// function handleLoginSubmit(e) {
+//   e.preventDefault()
+//   let loginName = e.target.children[0].value
+//   fetch('http://localhost:3000/users',{
+//     method: 'POST',
+//     headers: {
+//       "Content-Type": "application/json",
+//       "Accept": "application/json"
+//     },
+//     body: JSONify(
+//       {
+//         name: loginName
+//       }
+//     )
+//   })
+//   .then(function(resp){
+//     return resp.json()
+//   })
+//   .then(function(user){
+//     console.log(user)
+//     renderMainPage(user)
+//   })
+// }
 
-function renderMainPage(user) {
-  loginDiv.remove()
-  selections.innerHTML += `
-  <form action="/home">
-    <input type="text" name="" id="city_name" placeholder='enter city'>
-    <button type="submit">Enter</button>
-  </form>
-`
-}
+// function renderMainPage(user) {
+//   loginDiv.remove()
+//   selections.innerHTML += `
+//   <form action="/home">
+//     <input type="text" name="" id="city_name" placeholder='enter city'>
+//     <button type="submit">Enter</button>
+//   </form>
+// `
+// }
 
 
 function openLoginForm(){
   document.body.classList.add("showLoginForm");
 }
-function closeLoginForm(){
-  document.body.classList.remove("showLoginForm");
-}
+
 
 function handleLogin(e) {
-  closeLoginForm()
-  let name = e.target.parentElement.previousElementSibling.children[1].value
+  
+  let name = loginName.value
+  document.body.classList.remove("showLoginForm");
 }
 
 function fetchNeighborhoodList (){
@@ -129,5 +129,15 @@ function fetchRestaurants(e) {
   })
   .then(function(restaurants){
     console.log(restaurants)
+    populateRestaurantList(restaurants)
+  })
+}
+
+function populateRestaurantList(restaurants)  {
+  restaurants.forEach(function(restaurant){
+    // debugger
+    restaurantResults.innerHTML += `
+      <h3>${restaurant.restaurant.name}</h3?
+    `
   })
 }

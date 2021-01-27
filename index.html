@@ -15,10 +15,10 @@
   </div>
   <div class="popup-overlay"></div>
   <div class="popup">
-    <div class="popup-close" onclick="closeLoginForm()">&times;</div>
+    <!-- <div class="popup-close" onclick="closeLoginForm()">&times;</div> -->
     <div class="form">
       <div class="avatar">
-        <img src="https://lh3.googleusercontent.com/proxy/0aWyD7PaItqhWfSTRe-0MciVoW-AGMPW9RpoXCLp96K5OJUPlnC2mT0KKkRqmigHDZjYSoF0x5uH6MLIl1nP92c_zTSr9uE" alt="">
+        <img src="../neighborhood_food_backend/app/assets/images/redStar.jpg" alt=''>
       </div>
       <div class="header">
         Login
@@ -39,7 +39,6 @@
   <div id='cuisine'></div>
   <div id='restaurants'></div>
   <div class='row'>
-    <form action="/" id='restaurantSearch'>
       <div class='column'>
         <div id='neighborhood-list'>
             <select name="" id="neighborhoods"></select>
@@ -52,13 +51,14 @@
         </div>
         <div>
       </div>
-      <button type="submit" class='button'>Get restaurants</button>
-    </form>
+      <button type="submit" class='button' id='restaurant-search'>Get restaurants</button>
     <div class='column'>
       <div id='restaurant-list'>
-      
       </div>
     </div>
+  </div>
+  <div id='restaurant-results'>
+
   </div>
 </body>
 </html>
