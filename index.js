@@ -9,6 +9,7 @@ let neighborhoodsDropdown = document.getElementById('neighborhoods')
 let restaurantSearch = document.getElementById('restaurant-search')
 let restaurantResults = document.getElementById('restaurant-results')
 let cuisinesArray = [] 
+let user = {}
 // let wordlist = cuisinesArray
 
 
@@ -24,29 +25,27 @@ loginName.addEventListener('keyup', function(event){
   }
 })
 
-// function handleLoginSubmit(e) {
-//   e.preventDefault()
-//   let loginName = e.target.children[0].value
-//   fetch('http://localhost:3000/users',{
-//     method: 'POST',
-//     headers: {
-//       "Content-Type": "application/json",
-//       "Accept": "application/json"
-//     },
-//     body: JSONify(
-//       {
-//         name: loginName
-//       }
-//     )
-//   })
-//   .then(function(resp){
-//     return resp.json()
-//   })
-//   .then(function(user){
-//     console.log(user)
-//     renderMainPage(user)
-//   })
-// }
+function handleLoginSubmit(user) {
+  debugger
+  fetch('http://localhost:3000/users',{
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify(
+      {
+        name: user['name']
+      }
+    )
+  })
+  .then(function(resp){
+    return resp.json()
+  })
+  .then(function(user){
+    console.log(user)
+  })
+}
 
 // function renderMainPage(user) {
 //   loginDiv.remove()
@@ -67,6 +66,8 @@ function openLoginForm(){
 function handleLogin(e) {
   
   let name = loginName.value
+  user['name'] = name
+  handleLoginSubmit(user)
   document.body.classList.remove("showLoginForm");
 }
 
@@ -111,7 +112,6 @@ function populateCuisineList(cuisines) {
 }
 
 function fetchRestaurants(e) {
-  e.preventDefault()
   let search = {}
   let neighborhoodSelection = neighborhoodsDropdown.options[neighborhoodsDropdown.selectedIndex]
   let cuisineSelection = cuisinesDropdown.options[cuisinesDropdown.selectedIndex]
@@ -134,8 +134,8 @@ function fetchRestaurants(e) {
 }
 
 function populateRestaurantList(restaurants)  {
+  restaurantResults.innerHTML = ''
   restaurants.forEach(function(restaurant){
-    // debugger
     restaurantResults.innerHTML += `
       <h3>${restaurant.restaurant.name}</h3?
     `
