@@ -39,18 +39,27 @@
   <div id='cuisine'></div>
   <div id='restaurants'></div>
   <div class='row'>
-    <div class='col-sm-4'>
-      <div id='neighborhood-list'>
-
+    <form action="/" id='restaurantSearch'>
+      <div class='column'>
+        <div id='neighborhood-list'>
+            <select name="" id="neighborhoods"></select>
+        </div>
+        <div>
       </div>
-    </div>
-    <div class='col-sm-4'>
-      <div id='cuisine-list'>
-
+      <div class='column'>
+        <div id='cuisine-list'>
+            <select name="" id="cuisines"></select>
+        </div>
+        <div>
+      </div>
+      <button type="submit" class='button'>Get restaurants</button>
+    </form>
+    <div class='column'>
+      <div id='restaurant-list'>
+      
       </div>
     </div>
   </div>
-
 </body>
 </html>
 

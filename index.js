@@ -3,13 +3,25 @@ let selections = document.getElementById('selections')
 let loginButton = document.querySelector('#login-button')
 let neighborhoodList = document.getElementById('neighborhood-list')
 let cuisineList = document.getElementById('cuisine-list')
+let cuisinesDropdown = document.getElementById('cuisines')
+let loginName = document.getElementById('name')
+let neighborhoodsDropdown = document.getElementById('neighborhoods')
+let restaurantSearch = document.getElementById('restaurantSearch')
+let cuisinesArray = [] 
+// let wordlist = cuisinesArray
 
-window.onload = (event) => {
-  openLoginForm()
-  fetchNeighborhoodList()
-}
 
+openLoginForm()
+fetchNeighborhoodList()
+fetchCuisineList()
+
+restaurantSearch.addEventListener('submit', fetchRestaurants)
 loginButton.addEventListener('click', handleLogin)
+loginName.addEventListener('keyup', function(event){
+  if (event.key == 'Enter') {
+    handleLogin()
+  }
+})
 
 function handleLoginSubmit(e) {
   e.preventDefault()
@@ -59,7 +71,6 @@ function handleLogin(e) {
 }
 
 function fetchNeighborhoodList (){
-  
   fetch('http://localhost:3000/neighborhoods')
   .then(function(resp){
     return resp.json()
@@ -74,32 +85,49 @@ function fetchNeighborhoodList (){
 
 function populateNeighborhoodList(neighborhoods) {
   neighborhoods.forEach(function(neighborhood){
-    neighborhoodList.innerHTML += `
-      <h4>${neighborhood.name}</h4>
+    neighborhoodsDropdown.innerHTML += `
+      <option value=${neighborhood.entity_id}>${neighborhood.name} </option>
     `
   })
 }
 
 function fetchCuisineList (){
-  
   fetch('http://localhost:3000/cuisines')
   .then(function(resp){
     return resp.json()
   })
   .then(function(cuisines){
-    console.log(cuisines)
     populateCuisineList(cuisines)
   })
-  
- 
 }
 
 function populateCuisineList(cuisines) {
-  
   cuisines.forEach(function(cuisine){
-    cuisineList.innerHTML += `
-      <h4>${Cuisine.name}</h4>
+    cuisinesArray.push(cuisine.name)
+    cuisinesDropdown.innerHTML += `
+    <option value=${cuisine.cuisine_id}>${cuisine.name} </option>
     `
   })
+}
 
+function fetchRestaurants(e) {
+  e.preventDefault()
+  let search = {}
+  let neighborhoodSelection = neighborhoodsDropdown.options[neighborhoodsDropdown.selectedIndex]
+  let cuisineSelection = cuisinesDropdown.options[cuisinesDropdown.selectedIndex]
+  
+  search['entity_id'] = neighborhoodSelection.value
+  search['cuisine_id'] = cuisineSelection.value
+  
+  let url = 'http://localhost:3000/restaurants?'
+  for (const [key, value] of Object.entries(search))  {
+    url += `${key}=${value}&`
+  }
+  fetch(url)
+  .then(function(resp){
+    return resp.json()
+  })
+  .then(function(restaurants){
+    console.log(restaurants)
+  })
 }
