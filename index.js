@@ -9,7 +9,7 @@ let neighborhoodsDropdown = document.getElementById('neighborhoods')
 let restaurantSearch = document.getElementById('restaurant-search')
 let restaurantResults = document.getElementById('restaurant-results')
 let cuisinesArray = [] 
-let user = {}
+let userObj = {}
 // let wordlist = cuisinesArray
 
 
@@ -18,14 +18,14 @@ fetchNeighborhoodList()
 fetchCuisineList()
 
 restaurantSearch.addEventListener('click', fetchRestaurants)
-loginButton.addEventListener('click', handleLogin)
+loginButton.addEventListener('click', handleLoginSubmit)
 loginName.addEventListener('keyup', function(event){
   if (event.key == 'Enter') {
-    handleLogin()
+    handleLoginSubmit()
   }
 })
 
-function handleLoginSubmit(user) {
+function handleLoginSubmit(e) {
   debugger
   fetch('http://localhost:3000/users',{
     method: 'POST',
@@ -35,7 +35,7 @@ function handleLoginSubmit(user) {
     },
     body: JSON.stringify(
       {
-        name: user['name']
+        name: loginName.value
       }
     )
   })
@@ -43,7 +43,8 @@ function handleLoginSubmit(user) {
     return resp.json()
   })
   .then(function(user){
-    console.log(user)
+    userObj = user
+    document.body.classList.remove("showLoginForm");
   })
 }
 
@@ -62,14 +63,6 @@ function openLoginForm(){
   document.body.classList.add("showLoginForm");
 }
 
-
-function handleLogin(e) {
-  
-  let name = loginName.value
-  user['name'] = name
-  handleLoginSubmit(user)
-  document.body.classList.remove("showLoginForm");
-}
 
 function fetchNeighborhoodList (){
   fetch('http://localhost:3000/neighborhoods')
