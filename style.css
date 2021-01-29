@@ -8,7 +8,7 @@ ul.nav_header {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #B3ddf2;
+  background-color: rgb(123, 210, 247);
   height: 65px;
 }
 
@@ -162,6 +162,7 @@ body {
   border-radius: 1rem;
   background-color: rgb(230, 25, 56);
   color: white; 
+  font-size: large;
 }
 
 .restaurant-popup {
@@ -221,3 +222,16 @@ body {
   transform: translate(-50%, -50%);
 }
 
+/* .grid-history {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-gap: 10px;
+} */
+
+.neighborhood {
+  background: rgb(230, 25, 56);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  margin-top: 10px;
+  /* display: none; */
+}

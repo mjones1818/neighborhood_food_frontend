@@ -10,7 +10,11 @@ let restaurantSearch = document.getElementById('restaurant-search')
 let restaurantResults = document.getElementById('restaurant-results')
 let restaurantInfo = document.getElementById('restaurant-info')
 let restaurantInfoPopup = document.getElementById('restaurant-info-popup')
-let cuisinesArray = [] 
+let navbar = document.getElementById('nav_header')
+let searchBar = document.getElementById('restaurants')
+let historyResults = document.getElementById('history-info')
+let cuisinesArray = []
+let neighborhoodArray = [] 
 let userObj = {}
 // let wordlist = cuisinesArray
 
@@ -28,6 +32,7 @@ loginName.addEventListener('keyup', function(event){
 })
 restaurantResults.addEventListener('click', handleRestaurantSelection)
 restaurantInfoPopup.addEventListener('click', handleRestaurantButtons)
+navbar.addEventListener('click', handleNavBar)
 
 function handleLoginSubmit(e) {
   !!loginName.value ? loginName.value : loginName.value = userObj.name
@@ -74,6 +79,7 @@ function fetchNeighborhoodList (){
 
 function populateNeighborhoodList(neighborhoods) {
   neighborhoods.forEach(function(neighborhood){
+    neighborhoodArray.push(neighborhood.name)
     neighborhoodsDropdown.innerHTML += `
       <option value=${neighborhood.entity_id}>${neighborhood.name} </option>
     `
@@ -218,4 +224,67 @@ function like() {
     like.classList.add('liked')
     like.innerText = 'dislike this restaurant'
   }
+}
+
+
+function handleNavBar (e) {
+  // debugger
+  e.preventDefault()
+  switch (e.target.parentElement.id) {
+    case 'logout':
+      logout()
+      break;
+    case 'home':
+      home()
+      break;
+    case 'history' :  
+      console.log('history')
+      showHistory()
+      break;
+  }
+}
+
+function logout() {
+  userObj = {}
+  restaurantResults.innerHTML = ''
+  openLoginForm()
+}
+
+function home() {
+  restaurantResults.innerHTML = ''
+  fetchNeighborhoodList()
+  fetchCuisineList()
+}
+
+function showHistory() {
+  //remove search buttons
+  searchBar.style.visibility = 'hidden'
+  // iterate through neighborhoods
+  let i = 1
+  neighborhoodArray.forEach(function(neighborhood){
+    historyResults.innerHTML += `
+    <div class='neighborhood'>
+      <h3>${neighborhood}</h3>
+    </div>
+    <div class='grid'>
+
+    </div>
+    `
+    cuisinesArray.forEach(function(cuisine){
+      let gridElements = document.getElementsByClassName('grid')
+      // if (userObj.user_restaurants.find(element => element.restaurant_id === restaurant.restaurant.db_id)) {
+      //   classToAdd = 'visited'
+      // }
+      debugger
+      gridElements[i].innerHTML += `
+        <div>
+          <h4>${cuisine}</h4>
+        </div>
+      `
+    })
+    i += 1
+  })
+  // iterate through cuisines
+  // diferentiate if a restaurant was visited
+
 }
