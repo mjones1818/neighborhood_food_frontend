@@ -30,6 +30,7 @@ restaurantResults.addEventListener('click', handleRestaurantSelection)
 restaurantInfoPopup.addEventListener('click', handleRestaurantButtons)
 
 function handleLoginSubmit(e) {
+  !!loginName.value ? loginName.value : loginName.value = userObj.name
   fetch('http://localhost:3000/users',{
     method: 'POST',
     headers: {
@@ -47,6 +48,8 @@ function handleLoginSubmit(e) {
   })
   .then(function(user){
     userObj = user
+    console.log('user response -', user)
+    loginName.value = ''
     document.body.classList.remove("showLoginForm");
   })
 }
@@ -113,7 +116,6 @@ function fetchRestaurants(e) {
     return resp.json()
   })
   .then(function(restaurants){
-    console.log(restaurants)
     populateRestaurantList(restaurants)
   })
 }
@@ -121,20 +123,27 @@ function fetchRestaurants(e) {
 function populateRestaurantList(restaurants)  {
   restaurantResults.innerHTML = ''
   restaurants.forEach(function(restaurant){
+    let classToAdd = ''
+    if (userObj.user_restaurants.find(element => element.restaurant_id === restaurant.restaurant.db_id)) {
+      classToAdd = 'visited'
+    }
     restaurantResults.innerHTML += `
-      <div data-id=${restaurant.restaurant.db_id}>
+      <div data-id=${restaurant.restaurant.db_id} class='${classToAdd}'>
         <h3>${restaurant.restaurant.name}</h3>
         <p>Average cost for two people: $${restaurant.restaurant.average_cost_for_two}</p>
         Rating: ${restaurant.restaurant.user_rating.aggregate_rating}
       </div>
     `
+    classToAdd = ''
   })
 }
 
 
 function handleRestaurantSelection(e) {
-  
   let dbId = e.target.dataset.id
+  if (!dbId) {
+    dbId = e.target.parentElement.dataset.id
+  }
   fetch(`http://localhost:3000/restaurants/${dbId}`)
   .then(function(resp){
     return resp.json()
@@ -143,8 +152,6 @@ function handleRestaurantSelection(e) {
     console.log(restaurant)
     populateRestaurantInfo(restaurant)
   })
-  
-
 }
 
 function populateRestaurantInfo(restaurant){
@@ -155,10 +162,12 @@ function populateRestaurantInfo(restaurant){
       <p>${restaurant.address}</p>
       Average cost for two: $${restaurant.average_cost_for_two} <br>
       <img src="${restaurant.thumb}"> <br>
+      <button id='like' data-id=${restaurant.id}>Like this Restaurant</button>
       <button id='go-back'>Go back</button>
-      <button id='like'>Like this Restaurant</button>
-
   `
+  if (userObj.user_restaurants.find(element => element.restaurant_id === restaurant.id)) {
+    like()
+  }
   restaurantInfo.classList.add('restaurant-popup', 'popup')
   restaurantInfo.style.width = '50%'
   restaurantInfo.style.height = '60%'
@@ -171,5 +180,42 @@ function handleRestaurantButtons(e) {
     restaurantInfo.classList.remove('restaurant-popup', 'popup')
     document.getElementsByClassName('popup-overlay')[0].style.display = 'none'
     restaurantInfoPopup.innerHTML = ''
+    fetchRestaurants()
+  } else if (e.target.id === 'like') {
+  
+    let id = e.target.dataset.id
+    likeRestaurant(id,userObj)
+  }
+}
+
+function likeRestaurant(id,userObj) {
+  fetch(`http://localhost:3000/users/${userObj.id}`,{
+    method: 'PATCH',
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify(
+      {
+        restaurant_id: id
+      }
+    )
+  })
+  .then(function(resp){
+    like()
+    handleLoginSubmit()
+    fetchRestaurants()
+  })
+
+}
+
+function like() {
+  let like = document.getElementById('like')
+  if (like.classList.contains('liked')) {
+    like.classList.remove('liked')
+    like.innerText = 'like this restaurant'
+  } else {
+    like.classList.add('liked')
+    like.innerText = 'dislike this restaurant'
   }
 }
