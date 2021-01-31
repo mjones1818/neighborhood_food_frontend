@@ -19,7 +19,7 @@ let neighborhoodArray = []
 let neighborhoodObj = {}
 let userObj = {}
 let neighborhoodCuisineObj = {}
-
+const restaurantAdapter = new RestaurantAdapter('http://localhost:3000/')
 
 openLoginForm()
 fetchNeighborhoodList()
@@ -158,13 +158,10 @@ function handleRestaurantSelection(e) {
   if (!dbId) {
     dbId = e.target.parentElement.dataset.id
   }
-  fetch(`http://localhost:3000/restaurants/${dbId}`)
-  .then(function(resp){
-    return resp.json()
-  })
-  .then(function(restaurant){
-    populateRestaurantInfo(restaurant)
-  })
+  restaurantAdapter.handleRestaurantSelection(dbId)
+    .then(function(restaurant){
+      populateRestaurantInfo(restaurant)
+    })
 }
 
 function populateRestaurantInfo(restaurant){
@@ -270,6 +267,7 @@ function showHistory() {
   searchBar.style.visibility = 'hidden'
   restaurantResults.innerHTML = ''
   // iterate through neighborhoods
+
   let i = 1
   for (const [neighborhood, information] of Object.entries(neighborhoodObj)) {
     historyResults.innerHTML += `
