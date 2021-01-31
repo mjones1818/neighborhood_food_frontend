@@ -126,7 +126,7 @@ body.showLoginForm .popup {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   grid-gap: 10px;
   margin-top: 10px;
 }
@@ -253,4 +253,8 @@ select {
 
 .shuffle {
   background: darkblue !important;
+}
+
+#history-info > div {
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 }
