@@ -14,9 +14,11 @@ let navbar = document.getElementById('nav_header')
 let searchBar = document.getElementById('restaurants')
 let historyResults = document.getElementById('history-info')
 let cuisinesArray = []
-let neighborhoodArray = [] 
+let cuisineObj = {}
+let neighborhoodArray = []
+let neighborhoodObj = {}
 let userObj = {}
-// let wordlist = cuisinesArray
+let neighborhoodCuisineObj = {}
 
 
 openLoginForm()
@@ -33,6 +35,7 @@ loginName.addEventListener('keyup', function(event){
 restaurantResults.addEventListener('click', handleRestaurantSelection)
 restaurantInfoPopup.addEventListener('click', handleRestaurantButtons)
 navbar.addEventListener('click', handleNavBar)
+historyResults.addEventListener('click', handleHistoryClick)
 
 function handleLoginSubmit(e) {
   !!loginName.value ? loginName.value : loginName.value = userObj.name
@@ -52,10 +55,11 @@ function handleLoginSubmit(e) {
     return resp.json()
   })
   .then(function(user){
+    userObj = {}
     userObj = user
-    console.log('user response -', user)
     loginName.value = ''
     document.body.classList.remove("showLoginForm");
+    parseUserObj()
   })
 }
 
@@ -70,7 +74,6 @@ function fetchNeighborhoodList (){
     return resp.json()
   })
   .then(function(neighborhoods){
-    console.log(neighborhoods)
     populateNeighborhoodList(neighborhoods)
   })
   
@@ -78,8 +81,11 @@ function fetchNeighborhoodList (){
 }
 
 function populateNeighborhoodList(neighborhoods) {
+  neighborhoodsDropdown.innerHTML = ''
   neighborhoods.forEach(function(neighborhood){
     neighborhoodArray.push(neighborhood.name)
+    // neighborhoodObj[neighborhood.name] = {entity_id: neighborhood.entity_id, db_id: neighborhood.id}
+    neighborhoodObj[neighborhood.name] = {neighborhood }
     neighborhoodsDropdown.innerHTML += `
       <option value=${neighborhood.entity_id}>${neighborhood.name} </option>
     `
@@ -97,22 +103,24 @@ function fetchCuisineList (){
 }
 
 function populateCuisineList(cuisines) {
+  cuisinesDropdown.innerHTML = ''
   cuisines.forEach(function(cuisine){
     cuisinesArray.push(cuisine.name)
+    cuisineObj[cuisine.name] = cuisine.cuisine_id
     cuisinesDropdown.innerHTML += `
     <option value=${cuisine.cuisine_id}>${cuisine.name} </option>
     `
   })
 }
 
-function fetchRestaurants(e) {
-  let search = {}
-  let neighborhoodSelection = neighborhoodsDropdown.options[neighborhoodsDropdown.selectedIndex]
-  let cuisineSelection = cuisinesDropdown.options[cuisinesDropdown.selectedIndex]
-  
-  search['entity_id'] = neighborhoodSelection.value
-  search['cuisine_id'] = cuisineSelection.value
-  
+function fetchRestaurants(e, search={}) {
+  if (!search.cuisine_id) {
+    let neighborhoodSelection = neighborhoodsDropdown.options[neighborhoodsDropdown.selectedIndex]
+    let cuisineSelection = cuisinesDropdown.options[cuisinesDropdown.selectedIndex]
+    
+    search['entity_id'] = neighborhoodSelection.value
+    search['cuisine_id'] = cuisineSelection.value
+  }
   let url = 'http://localhost:3000/restaurants?'
   for (const [key, value] of Object.entries(search))  {
     url += `${key}=${value}&`
@@ -155,7 +163,6 @@ function handleRestaurantSelection(e) {
     return resp.json()
   })
   .then(function(restaurant){
-    console.log(restaurant)
     populateRestaurantInfo(restaurant)
   })
 }
@@ -211,8 +218,8 @@ function likeRestaurant(id,userObj) {
     like()
     handleLoginSubmit()
     fetchRestaurants()
+    //  parseUserObj()
   })
-
 }
 
 function like() {
@@ -228,7 +235,6 @@ function like() {
 
 
 function handleNavBar (e) {
-  // debugger
   e.preventDefault()
   switch (e.target.parentElement.id) {
     case 'logout':
@@ -238,7 +244,6 @@ function handleNavBar (e) {
       home()
       break;
     case 'history' :  
-      console.log('history')
       showHistory()
       break;
   }
@@ -247,44 +252,86 @@ function handleNavBar (e) {
 function logout() {
   userObj = {}
   restaurantResults.innerHTML = ''
+  historyResults.innerHTML = ''
+  home()
   openLoginForm()
 }
 
 function home() {
   restaurantResults.innerHTML = ''
-  fetchNeighborhoodList()
-  fetchCuisineList()
+  // fetchNeighborhoodList()
+  // fetchCuisineList()
+  searchBar.style.visibility = 'visible'
+  historyResults.innerHTML = ''
 }
 
 function showHistory() {
   //remove search buttons
   searchBar.style.visibility = 'hidden'
+  restaurantResults.innerHTML = ''
   // iterate through neighborhoods
   let i = 1
-  neighborhoodArray.forEach(function(neighborhood){
+  for (const [neighborhood, information] of Object.entries(neighborhoodObj)) {
     historyResults.innerHTML += `
     <div class='neighborhood'>
-      <h3>${neighborhood}</h3>
+      <h3 data-entity-id='${information.neighborhood.entity_id}' data-db-id='${information.neighborhood.id}'>${neighborhood}</h3>
     </div>
     <div class='grid'>
 
     </div>
     `
-    cuisinesArray.forEach(function(cuisine){
+    for (const[cuisine, id]of Object.entries(cuisineObj)) {
       let gridElements = document.getElementsByClassName('grid')
-      // if (userObj.user_restaurants.find(element => element.restaurant_id === restaurant.restaurant.db_id)) {
-      //   classToAdd = 'visited'
-      // }
-      debugger
+      let classToAdd = ''
+      let neighborhoodId = gridElements[i].previousElementSibling.children[0].dataset.entityId
+      let neighborhoodDbId = gridElements[i].previousElementSibling.children[0].dataset.dbId
+      if (userObj.neighborhoodCuisines[neighborhoodDbId] && userObj.neighborhoodCuisines[neighborhoodDbId].includes(id)) {
+        classToAdd = 'visited'
+      }
       gridElements[i].innerHTML += `
-        <div>
+        <div class='${classToAdd}' data-cuisine-id='${id}' data-entity-id='${neighborhoodId}'>
           <h4>${cuisine}</h4>
         </div>
       `
-    })
+      classToAdd = ''
+    }
     i += 1
-  })
-  // iterate through cuisines
-  // diferentiate if a restaurant was visited
+  }
+}
 
+function parseUserObj() {
+  delete userObj.neighborhoodCuisines
+  neighborhoodCuisineObj = {}
+  userObj.user_restaurants.forEach(function(user_restaurant){
+    if (!neighborhoodCuisineObj[user_restaurant.restaurant.neighborhood_id]) {
+      neighborhoodCuisineObj[user_restaurant.restaurant.neighborhood_id] = [user_restaurant.restaurant.cuisine_id]
+    } else {
+      neighborhoodCuisineObj[user_restaurant.restaurant.neighborhood_id].push(user_restaurant.restaurant.cuisine_id)
+    } 
+  })
+  userObj['neighborhoodCuisines'] = neighborhoodCuisineObj
+}
+
+
+function handleHistoryClick(e) {
+  let searchCriteria = e.target.dataset
+  if (!searchCriteria['cuisineId']) {
+    searchCriteria = e.target.parentElement.dataset
+
+  }
+  if (searchCriteria) {
+    let fetchRestaurantsSeach = {}
+    fetchRestaurantsSeach['cuisine_id'] = searchCriteria['cuisineId']
+    fetchRestaurantsSeach['entity_id'] = searchCriteria['entityId']
+    home()
+    for (let i = 0; i < neighborhoodsDropdown.children.length; i++) {
+      if (neighborhoodsDropdown.children[i].value === fetchRestaurantsSeach['entity_id']) {
+        neighborhoodsDropdown.children[i].selected = true
+      }
+      if (cuisinesDropdown.children[i].value === fetchRestaurantsSeach['cuisine_id']) {
+        cuisinesDropdown.children[i].selected = true
+      }
+    }
+    fetchRestaurants('',fetchRestaurantsSeach)
+  }
 }
