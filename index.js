@@ -1,4 +1,3 @@
-let loginDiv = document.getElementById('login')
 let selections = document.getElementById('selections')
 let loginButton = document.querySelector('#login-button')
 let neighborhoodList = document.getElementById('neighborhood-list')
@@ -13,9 +12,7 @@ let restaurantInfoPopup = document.getElementById('restaurant-info-popup')
 let navbar = document.getElementById('nav_header')
 let searchBar = document.getElementById('restaurants')
 let historyResults = document.getElementById('history-info')
-let cuisinesArray = []
 let cuisineObj = {}
-let neighborhoodArray = []
 let neighborhoodObj = {}
 let userObj = {}
 let neighborhoodCuisineObj = {}
@@ -83,8 +80,6 @@ function fetchNeighborhoodList (){
 function populateNeighborhoodList(neighborhoods) {
   neighborhoodsDropdown.innerHTML = ''
   neighborhoods.forEach(function(neighborhood){
-    neighborhoodArray.push(neighborhood.name)
-    // neighborhoodObj[neighborhood.name] = {entity_id: neighborhood.entity_id, db_id: neighborhood.id}
     neighborhoodObj[neighborhood.name] = {neighborhood }
     neighborhoodsDropdown.innerHTML += `
       <option value=${neighborhood.entity_id}>${neighborhood.name} </option>
@@ -105,7 +100,6 @@ function fetchCuisineList (){
 function populateCuisineList(cuisines) {
   cuisinesDropdown.innerHTML = ''
   cuisines.forEach(function(cuisine){
-    cuisinesArray.push(cuisine.name)
     cuisineObj[cuisine.name] = cuisine.cuisine_id
     cuisinesDropdown.innerHTML += `
     <option value=${cuisine.cuisine_id}>${cuisine.name} </option>
@@ -256,18 +250,13 @@ function logout() {
 
 function home() {
   restaurantResults.innerHTML = ''
-  // fetchNeighborhoodList()
-  // fetchCuisineList()
   searchBar.style.visibility = 'visible'
   historyResults.innerHTML = ''
 }
 
 function showHistory() {
-  //remove search buttons
   searchBar.style.visibility = 'hidden'
   restaurantResults.innerHTML = ''
-  // iterate through neighborhoods
-
   let i = 1
   for (const [neighborhood, information] of Object.entries(neighborhoodObj)) {
     historyResults.innerHTML += `
