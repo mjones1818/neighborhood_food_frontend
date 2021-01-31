@@ -30,7 +30,7 @@ ul.nav_header li a {
 }
 
 ul.nav_header li a:hover {
-  background-color: #111;
+  background-color: rgb(230, 25, 56);
 }
 
 .popup-overlay {
@@ -126,15 +126,20 @@ body.showLoginForm .popup {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   grid-gap: 10px;
   margin-top: 10px;
 }
 .grid > div {
   background: #B3ddf2;
-  padding: 1.5rem;
-  border-radius: 1rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
 }
+
+.grid > div > h4 {
+  text-align: center;
+}
+
 /* body {
   margin: 2rem;
   font: 12px system-ui;
@@ -235,6 +240,17 @@ body {
   /* display: none; */
 }
 
-.grid-resize {
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+.neighborhood h2 {
+  text-align: center;
+}
+
+select {
+  font-size: large;
+  border: 0px solid #fff;
+  background-color: transparent;
+  color: white;
+}
+
+.shuffle {
+  background: darkblue !important;
 }

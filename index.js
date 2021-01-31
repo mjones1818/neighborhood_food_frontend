@@ -144,6 +144,9 @@ function populateRestaurantList(restaurants)  {
     `
     classToAdd = ''
   })
+  if (restaurants.length==0) {
+    restaurantResults.innerHTML = '<h2> No restaurants found </h2>'
+  }
 }
 
 
@@ -166,11 +169,11 @@ function populateRestaurantInfo(restaurant){
       <p>${restaurant.address}</p>
       Average cost for two: $${restaurant.average_cost_for_two} <br>
       <img src="${restaurant.thumb}"> <br>
-      <button id='like' data-id=${restaurant.id}>Like this Restaurant</button>
+      <button id='visited' data-id=${restaurant.id}>I visited this restaurant</button>
       <button id='go-back'>Go back</button>
   `
   if (userObj.user_restaurants.find(element => element.restaurant_id === restaurant.id)) {
-    like()
+    visited()
   }
   restaurantInfo.classList.add('restaurant-popup', 'popup')
   restaurantInfo.style.width = '50%'
@@ -185,14 +188,13 @@ function handleRestaurantButtons(e) {
     document.getElementsByClassName('popup-overlay')[0].style.display = 'none'
     restaurantInfoPopup.innerHTML = ''
     fetchRestaurants()
-  } else if (e.target.id === 'like') {
-  
+  } else if (e.target.id === 'visited') {
     let id = e.target.dataset.id
-    likeRestaurant(id,userObj)
+    visitRestaurant(id,userObj)
   }
 }
 
-function likeRestaurant(id,userObj) {
+function visitRestaurant(id,userObj) {
   fetch(`http://localhost:3000/users/${userObj.id}`,{
     method: 'PATCH',
     headers: {
@@ -206,21 +208,22 @@ function likeRestaurant(id,userObj) {
     )
   })
   .then(function(resp){
-    like()
+    visited()
     handleLoginSubmit()
     fetchRestaurants()
     //  parseUserObj()
   })
 }
 
-function like() {
-  let like = document.getElementById('like')
-  if (like.classList.contains('liked')) {
-    like.classList.remove('liked')
-    like.innerText = 'like this restaurant'
+function visited() {
+  let visited = document.getElementById('visited')
+  
+  if (visited.classList.contains('visited')) {
+    visited.classList.remove('visited')
+    visited.innerText = 'I went to this restaurant'
   } else {
-    like.classList.add('liked')
-    like.innerText = 'dislike this restaurant'
+    visited.classList.add('visited')
+    visited.innerText = 'You went here (click to remove visit)'
   }
 }
 
@@ -261,7 +264,7 @@ function showHistory() {
   for (const [neighborhood, information] of Object.entries(neighborhoodObj)) {
     historyResults.innerHTML += `
     <div class='neighborhood'>
-      <h3 data-entity-id='${information.neighborhood.entity_id}' data-db-id='${information.neighborhood.id}'>${neighborhood}</h3>
+      <h2 data-entity-id='${information.neighborhood.entity_id}' data-db-id='${information.neighborhood.id}'>${neighborhood}</h2>
     </div>
     <div class='grid'>
 
@@ -276,7 +279,7 @@ function showHistory() {
         classToAdd = 'visited'
       }
       gridElements[i].innerHTML += `
-        <div class='${classToAdd}' data-cuisine-id='${id}' data-entity-id='${neighborhoodId}'>
+        <div class='cuisine-items ${classToAdd}' data-cuisine-id='${id}' data-entity-id='${neighborhoodId}'>
           <h4>${cuisine}</h4>
         </div>
       `
@@ -304,21 +307,44 @@ function handleHistoryClick(e) {
   let searchCriteria = e.target.dataset
   if (!searchCriteria['cuisineId']) {
     searchCriteria = e.target.parentElement.dataset
-
   }
   if (searchCriteria) {
-    let fetchRestaurantsSeach = {}
-    fetchRestaurantsSeach['cuisine_id'] = searchCriteria['cuisineId']
-    fetchRestaurantsSeach['entity_id'] = searchCriteria['entityId']
+    let fetchRestaurantsSearch = {}
+    fetchRestaurantsSearch['cuisine_id'] = searchCriteria['cuisineId']
+    fetchRestaurantsSearch['entity_id'] = searchCriteria['entityId']
     home()
     for (let i = 0; i < neighborhoodsDropdown.children.length; i++) {
-      if (neighborhoodsDropdown.children[i].value === fetchRestaurantsSeach['entity_id']) {
+      if (neighborhoodsDropdown.children[i].value === fetchRestaurantsSearch['entity_id']) {
         neighborhoodsDropdown.children[i].selected = true
       }
-      if (cuisinesDropdown.children[i].value === fetchRestaurantsSeach['cuisine_id']) {
+    }
+    for (let i = 0; i < cuisinesDropdown.children.length; i++) {
+      if (cuisinesDropdown.children[i].value === fetchRestaurantsSearch['cuisine_id']) {
         cuisinesDropdown.children[i].selected = true
       }
     }
-    fetchRestaurants('',fetchRestaurantsSeach)
+    fetchRestaurants('',fetchRestaurantsSearch)
   }
 }
+
+function shuffle() {
+  let cuisineItems = document.getElementsByClassName('cuisine-items')
+  // for (let i = 0; i< cuisineItems.length; i++) {
+  //   cuisineItems[i].classList.add('shuffle')
+  // }
+  let i = 1
+  let myVar = window.setInterval(runShuffle,20)
+
+  function runShuffle(){
+    
+    cuisineItems[i].classList.add('shuffle')
+    cuisineItems[i].scrollIntoView()
+    cuisineItems[i-1].classList.remove('shuffle')
+    i += 1
+     if (i == cuisineItems.length) { 
+        i = 1 
+        window.clearInterval(myVar)
+      }
+  }
+}
+
