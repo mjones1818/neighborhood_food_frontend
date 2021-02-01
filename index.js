@@ -108,21 +108,22 @@ function populateCuisineList(cuisines) {
 }
 
 function fetchRestaurants(e, search={}) {
-  if (!search.cuisine_id) {
-    let neighborhoodSelection = neighborhoodsDropdown.options[neighborhoodsDropdown.selectedIndex]
-    let cuisineSelection = cuisinesDropdown.options[cuisinesDropdown.selectedIndex]
+  // if (!search.cuisine_id) {
+  //   let neighborhoodSelection = neighborhoodsDropdown.options[neighborhoodsDropdown.selectedIndex]
+  //   let cuisineSelection = cuisinesDropdown.options[cuisinesDropdown.selectedIndex]
     
-    search['entity_id'] = neighborhoodSelection.value
-    search['cuisine_id'] = cuisineSelection.value
-  }
-  let url = 'http://localhost:3000/restaurants?'
-  for (const [key, value] of Object.entries(search))  {
-    url += `${key}=${value}&`
-  }
-  fetch(url)
-  .then(function(resp){
-    return resp.json()
-  })
+  //   search['entity_id'] = neighborhoodSelection.value
+  //   search['cuisine_id'] = cuisineSelection.value
+  // }
+  // let url = 'http://localhost:3000/restaurants?'
+  // for (const [key, value] of Object.entries(search))  {
+  //   url += `${key}=${value}&`
+  // }
+  // fetch(url)
+  // .then(function(resp){
+  //   return resp.json()
+  // })
+  restaurantAdapter.fetchRestaurants(e, search)
   .then(function(restaurants){
     populateRestaurantList(restaurants)
   })
@@ -211,7 +212,6 @@ function visitRestaurant(id,userObj) {
     visited()
     handleLoginSubmit()
     fetchRestaurants()
-    //  parseUserObj()
   })
 }
 
@@ -267,7 +267,6 @@ function showHistory() {
       <h2 data-entity-id='${information.neighborhood.entity_id}' data-db-id='${information.neighborhood.id}'>${neighborhood}</h2>
     </div>
     <div class='grid'>
-
     </div>
     `
     for (const[cuisine, id]of Object.entries(cuisineObj)) {
@@ -329,9 +328,6 @@ function handleHistoryClick(e) {
 
 function shuffle() {
   let cuisineItems = document.getElementsByClassName('cuisine-items')
-  // for (let i = 0; i< cuisineItems.length; i++) {
-  //   cuisineItems[i].classList.add('shuffle')
-  // }
   let i = 1
   let myVar = window.setInterval(runShuffle,20)
 

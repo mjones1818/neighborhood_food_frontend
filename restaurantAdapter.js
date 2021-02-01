@@ -4,7 +4,6 @@ class RestaurantAdapter {
   }
 
   fetchRestaurants(e, search={}) {
-    debugger
     if (!search.cuisine_id) {
       let neighborhoodSelection = neighborhoodsDropdown.options[neighborhoodsDropdown.selectedIndex]
       let cuisineSelection = cuisinesDropdown.options[cuisinesDropdown.selectedIndex]
@@ -16,7 +15,7 @@ class RestaurantAdapter {
     for (const [key, value] of Object.entries(search))  {
       url += `${key}=${value}&`
     }
-    fetch(url)
+    return fetch(url)
     .then(function(resp){
       return resp.json()
     })
