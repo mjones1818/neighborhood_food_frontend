@@ -12,6 +12,7 @@ let restaurantInfoPopup = document.getElementById('restaurant-info-popup')
 let navbar = document.getElementById('nav_header')
 let searchBar = document.getElementById('restaurants')
 let historyResults = document.getElementById('history-info')
+let gridPopup = document.getElementById('grid-popup')
 let cuisineObj = {}
 let neighborhoodObj = {}
 let userObj = {}
@@ -328,19 +329,29 @@ function handleHistoryClick(e) {
 
 function shuffle() {
   let cuisineItems = document.getElementsByClassName('cuisine-items')
-  let i = 1
-  let myVar = window.setInterval(runShuffle,20)
-
+  let i = Math.floor(Math.random() * cuisineItems.length) + 1
+  let t = 5
+  runShuffle()
+  function changeTimer(){ 
+    t = t * 1.07; 
+  } 
   function runShuffle(){
-    
     cuisineItems[i].classList.add('shuffle')
-    cuisineItems[i].scrollIntoView()
+    cuisineItems[i].parentElement.previousElementSibling.scrollIntoView()
     cuisineItems[i-1].classList.remove('shuffle')
     i += 1
-     if (i == cuisineItems.length) { 
-        i = 1 
-        window.clearInterval(myVar)
-      }
+    if (i > cuisineItems.length -1) {
+     i = 1
+    }
+    changeTimer()
+    let firstTimeout = setTimeout(runShuffle,t)
+    console.log(t)
+    if (t > 600) {
+      clearTimeout(firstTimeout)
+    }
   }
 }
 
+function showGridPopup {
+  
+}
