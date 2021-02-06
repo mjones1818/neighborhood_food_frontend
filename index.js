@@ -13,6 +13,7 @@ let navbar = document.getElementById('nav_header')
 let searchBar = document.getElementById('restaurants')
 let historyResults = document.getElementById('history-info')
 let gridPopup = document.getElementById('grid-popup')
+
 let cuisineObj = {}
 let neighborhoodObj = {}
 let userObj = {}
@@ -331,6 +332,7 @@ function shuffle() {
   let cuisineItems = document.getElementsByClassName('cuisine-items')
   let i = Math.floor(Math.random() * cuisineItems.length) + 1
   let t = 5
+  let shuffleResults= {target:{}}
   runShuffle()
   function changeTimer(){ 
     t = t * 1.07; 
@@ -348,10 +350,19 @@ function shuffle() {
     console.log(t)
     if (t > 600) {
       clearTimeout(firstTimeout)
+      shuffleResults[cuisineItems[i]
+      showGridPopup()
     }
   }
 }
 
-function showGridPopup {
-  
+function showGridPopup(neighborhoodCuisineInfo={}) {
+  gridPopup.innerHTML += `
+  Would you like to visit .....
+  <button>Yes</button>
+  `
+  gridPopup.classList.add('restaurant-popup', 'popup')
+  gridPopup.style.width = '20%'
+  gridPopup.style.height = '40%'
+  document.getElementsByClassName('popup-overlay')[0].style.display = 'block'
 }
