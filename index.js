@@ -13,11 +13,12 @@ let navbar = document.getElementById('nav_header')
 let searchBar = document.getElementById('restaurants')
 let historyResults = document.getElementById('history-info')
 let gridPopup = document.getElementById('grid-popup')
-
 let cuisineObj = {}
 let neighborhoodObj = {}
 let userObj = {}
 let neighborhoodCuisineObj = {}
+let shuffleButton = document.getElementById('shuffle')
+let shuffleNav = document.getElementById('shuffle-nav')
 const restaurantAdapter = new RestaurantAdapter('http://localhost:3000/')
 
 openLoginForm()
@@ -35,6 +36,9 @@ restaurantResults.addEventListener('click', handleRestaurantSelection)
 restaurantInfoPopup.addEventListener('click', handleRestaurantButtons)
 navbar.addEventListener('click', handleNavBar)
 historyResults.addEventListener('click', handleHistoryClick)
+// gridPopup.addEventListener('click', handleShuffleSelection)
+shuffleButton.addEventListener('click', shuffle)
+shuffleNav.addEventListener('click', handleShuffleNav)
 
 function handleLoginSubmit(e) {
   !!loginName.value ? loginName.value : loginName.value = userObj.name
@@ -257,11 +261,13 @@ function home() {
   restaurantResults.innerHTML = ''
   searchBar.style.visibility = 'visible'
   historyResults.innerHTML = ''
+  shuffleButton.style.display = 'none'
 }
 
 function showHistory() {
   searchBar.style.visibility = 'hidden'
   restaurantResults.innerHTML = ''
+  shuffleButton.style.display = 'block'
   let i = 1
   for (const [neighborhood, information] of Object.entries(neighborhoodObj)) {
     historyResults.innerHTML += `
@@ -330,9 +336,11 @@ function handleHistoryClick(e) {
 
 function shuffle() {
   let cuisineItems = document.getElementsByClassName('cuisine-items')
-  let i = Math.floor(Math.random() * cuisineItems.length) + 1
+  let i = 1
   let t = 5
   let shuffleResults= {target:{}}
+  let initialSpinTime = Math.floor(Math.random() * 900) + 400
+  let counter = 0
   runShuffle()
   function changeTimer(){ 
     t = t * 1.07; 
@@ -345,24 +353,38 @@ function shuffle() {
     if (i > cuisineItems.length -1) {
      i = 1
     }
-    changeTimer()
+    if (counter > initialSpinTime ) {
+      changeTimer()
+    }
+
     let firstTimeout = setTimeout(runShuffle,t)
-    console.log(t)
     if (t > 600) {
       clearTimeout(firstTimeout)
-      shuffleResults[cuisineItems[i]
-      showGridPopup()
+      shuffleResults['target']= cuisineItems[i-1]
+      shuffleResults['neighborhood'] = cuisineItems[i-1].parentElement.previousElementSibling.innerText
+      // showGridPopup(shuffleResults)
+      handleHistoryClick(shuffleResults)
     }
+    counter++
   }
 }
 
-function showGridPopup(neighborhoodCuisineInfo={}) {
-  gridPopup.innerHTML += `
-  Would you like to visit .....
-  <button>Yes</button>
-  `
-  gridPopup.classList.add('restaurant-popup', 'popup')
-  gridPopup.style.width = '20%'
-  gridPopup.style.height = '40%'
-  document.getElementsByClassName('popup-overlay')[0].style.display = 'block'
+function handleShuffleNav (e) {
+  showHistory()
+  shuffle()
+
 }
+
+// function showGridPopup(neighborhoodCuisineInfo={}) {
+//   gridPopup.innerHTML += `
+//   Would you like to get ${neighborhoodCuisineInfo.target.innerText} food in ${neighborhoodCuisineInfo.neighborhood}
+//   <button id='yes'>Yes</button>
+//   <button id='no'>No. Shuffle again</button>
+//   `
+//   gridPopup.setAttribute('data-cuisine-id', neighborhoodCuisineInfo.target.dataset.cuisineId)
+//   gridPopup.setAttribute('data-entity-id', neighborhoodCuisineInfo.target.dataset.entityId)
+//   gridPopup.classList.add('restaurant-popup', 'popup')
+//   gridPopup.style.width = '20%'
+//   gridPopup.style.height = '40%'
+//   document.getElementsByClassName('popup-overlay')[0].style.display = 'block'
+// }
