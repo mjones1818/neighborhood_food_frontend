@@ -27,4 +27,10 @@ class RestaurantAdapter {
       return resp.json()
     })
   }
+
+  destroyAllRestaurants() {
+    fetch(`${this.baseURL}restaurants`,{
+    method: 'DELETE',
+    })
+  }
 }

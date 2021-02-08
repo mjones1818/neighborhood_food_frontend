@@ -36,8 +36,6 @@ restaurantResults.addEventListener('click', handleRestaurantSelection)
 restaurantInfoPopup.addEventListener('click', handleRestaurantButtons)
 navbar.addEventListener('click', handleNavBar)
 historyResults.addEventListener('click', handleHistoryClick)
-// gridPopup.addEventListener('click', handleShuffleSelection)
-// shuffleButton.addEventListener('click', shuffle)
 shuffleNav.addEventListener('click', handleShuffleNav)
 
 function handleLoginSubmit(e) {
@@ -114,21 +112,6 @@ function populateCuisineList(cuisines) {
 }
 
 function fetchRestaurants(e, search={}) {
-  // if (!search.cuisine_id) {
-  //   let neighborhoodSelection = neighborhoodsDropdown.options[neighborhoodsDropdown.selectedIndex]
-  //   let cuisineSelection = cuisinesDropdown.options[cuisinesDropdown.selectedIndex]
-    
-  //   search['entity_id'] = neighborhoodSelection.value
-  //   search['cuisine_id'] = cuisineSelection.value
-  // }
-  // let url = 'http://localhost:3000/restaurants?'
-  // for (const [key, value] of Object.entries(search))  {
-  //   url += `${key}=${value}&`
-  // }
-  // fetch(url)
-  // .then(function(resp){
-  //   return resp.json()
-  // })
   restaurantAdapter.fetchRestaurants(e, search)
   .then(function(restaurants){
     populateRestaurantList(restaurants)
@@ -253,6 +236,7 @@ function logout() {
   userObj = {}
   restaurantResults.innerHTML = ''
   historyResults.innerHTML = ''
+  restaurantAdapter.destroyAllRestaurants()
   home()
   openLoginForm()
 }
@@ -374,16 +358,3 @@ function handleShuffleNav (e) {
   shuffle()
 }
 
-// function showGridPopup(neighborhoodCuisineInfo={}) {
-//   gridPopup.innerHTML += `
-//   Would you like to get ${neighborhoodCuisineInfo.target.innerText} food in ${neighborhoodCuisineInfo.neighborhood}
-//   <button id='yes'>Yes</button>
-//   <button id='no'>No. Shuffle again</button>
-//   `
-//   gridPopup.setAttribute('data-cuisine-id', neighborhoodCuisineInfo.target.dataset.cuisineId)
-//   gridPopup.setAttribute('data-entity-id', neighborhoodCuisineInfo.target.dataset.entityId)
-//   gridPopup.classList.add('restaurant-popup', 'popup')
-//   gridPopup.style.width = '20%'
-//   gridPopup.style.height = '40%'
-//   document.getElementsByClassName('popup-overlay')[0].style.display = 'block'
-// }
