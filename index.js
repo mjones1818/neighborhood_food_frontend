@@ -37,7 +37,7 @@ restaurantInfoPopup.addEventListener('click', handleRestaurantButtons)
 navbar.addEventListener('click', handleNavBar)
 historyResults.addEventListener('click', handleHistoryClick)
 // gridPopup.addEventListener('click', handleShuffleSelection)
-shuffleButton.addEventListener('click', shuffle)
+// shuffleButton.addEventListener('click', shuffle)
 shuffleNav.addEventListener('click', handleShuffleNav)
 
 function handleLoginSubmit(e) {
@@ -261,13 +261,12 @@ function home() {
   restaurantResults.innerHTML = ''
   searchBar.style.visibility = 'visible'
   historyResults.innerHTML = ''
-  shuffleButton.style.display = 'none'
+
 }
 
 function showHistory() {
   searchBar.style.visibility = 'hidden'
   restaurantResults.innerHTML = ''
-  shuffleButton.style.display = 'block'
   let i = 1
   for (const [neighborhood, information] of Object.entries(neighborhoodObj)) {
     historyResults.innerHTML += `
@@ -358,7 +357,7 @@ function shuffle() {
     }
 
     let firstTimeout = setTimeout(runShuffle,t)
-    if (t > 600) {
+    if (t > 550) {
       clearTimeout(firstTimeout)
       shuffleResults['target']= cuisineItems[i-1]
       shuffleResults['neighborhood'] = cuisineItems[i-1].parentElement.previousElementSibling.innerText
@@ -370,9 +369,9 @@ function shuffle() {
 }
 
 function handleShuffleNav (e) {
+  home()
   showHistory()
   shuffle()
-
 }
 
 // function showGridPopup(neighborhoodCuisineInfo={}) {
