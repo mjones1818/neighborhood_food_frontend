@@ -159,6 +159,8 @@ function populateRestaurantInfo(restaurant){
       <p>${restaurant.address}</p>
       Average cost for two: $${restaurant.average_cost_for_two} <br>
       <img src="${restaurant.thumb}"> <br>
+      <a href='${restaurant.url}' target="_blank" rel="noopener noreferrer"><button>Zomato Link</button></a>
+      <a href='${googleSearchUrl(restaurant.name, restaurant.locality)}' target="_blank" rel="noopener noreferrer"><button>Google Link</button></a>
       <button id='visited' data-id=${restaurant.id}>I visited this restaurant</button>
       <button id='go-back'>Go back</button>
   `
@@ -252,6 +254,7 @@ function showHistory() {
   searchBar.style.visibility = 'hidden'
   restaurantResults.innerHTML = ''
   let i = 1
+  // debugger
   for (const [neighborhood, information] of Object.entries(neighborhoodObj)) {
     historyResults.innerHTML += `
     <div class='neighborhood'>
@@ -265,6 +268,9 @@ function showHistory() {
       let classToAdd = ''
       let neighborhoodId = gridElements[i].previousElementSibling.children[0].dataset.entityId
       let neighborhoodDbId = gridElements[i].previousElementSibling.children[0].dataset.dbId
+      if (neighborhoodDbId == 135) {
+        // debugger
+      }
       if (userObj.neighborhoodCuisines[neighborhoodDbId] && userObj.neighborhoodCuisines[neighborhoodDbId].includes(id)) {
         classToAdd = 'visited'
       }
@@ -358,3 +364,9 @@ function handleShuffleNav (e) {
   shuffle()
 }
 
+function googleSearchUrl (name, locality) {
+  let googleUrl = 'https://www.google.com/maps/search/?api=1&query='
+  googleUrl += `${encodeURIComponent(name)}+${encodeURIComponent(locality)}`
+
+  return googleUrl
+}
