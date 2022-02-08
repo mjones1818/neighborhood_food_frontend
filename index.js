@@ -4,6 +4,7 @@ let neighborhoodList = document.getElementById('neighborhood-list')
 let cuisineList = document.getElementById('cuisine-list')
 let cuisinesDropdown = document.getElementById('cuisines')
 let loginName = document.getElementById('name')
+let loginPassword = document.getElementById('password')
 let neighborhoodsDropdown = document.getElementById('neighborhoods')
 let restaurantSearch = document.getElementById('restaurant-search')
 let restaurantResults = document.getElementById('restaurant-results')
@@ -19,7 +20,9 @@ let userObj = {}
 let neighborhoodCuisineObj = {}
 let shuffleButton = document.getElementById('shuffle')
 let shuffleNav = document.getElementById('shuffle-nav')
-const restaurantAdapter = new RestaurantAdapter('http://localhost:3000/')
+let url = 'https://neighborhood-food.herokuapp.com/'
+// let url = 'http://localhost:3000/'
+const restaurantAdapter = new RestaurantAdapter(url)
 
 openLoginForm()
 fetchNeighborhoodList()
@@ -27,7 +30,7 @@ fetchCuisineList()
 
 restaurantSearch.addEventListener('click', fetchRestaurants)
 loginButton.addEventListener('click', handleLoginSubmit)
-loginName.addEventListener('keyup', function(event){
+loginPassword.addEventListener('keyup', function(event){
   if (event.key == 'Enter') {
     handleLoginSubmit()
   }
@@ -40,7 +43,7 @@ shuffleNav.addEventListener('click', handleShuffleNav)
 
 function handleLoginSubmit(e) {
   !!loginName.value ? loginName.value : loginName.value = userObj.name
-  fetch('http://localhost:3000/users',{
+  fetch(`${url}auth/login`,{
     method: 'POST',
     headers: {
       "Content-Type": "application/json",
@@ -48,7 +51,34 @@ function handleLoginSubmit(e) {
     },
     body: JSON.stringify(
       {
-        name: loginName.value
+        name: loginName.value,
+        password: loginPassword.value
+      }
+    )
+  })
+  .then(function(resp){
+    return resp.json()
+  })
+  .then(function(user){
+    sessionStorage.setItem('token', user.token)
+    userObj = {}
+    userObj['name'] = user.username
+    fetchLoginData()
+  })
+}
+
+function fetchLoginData () {
+  userObj.name
+  fetch(`${url}users`,{
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "Authorization": sessionStorage.getItem('token')
+    },
+    body: JSON.stringify(
+      {
+        name: userObj.name
       }
     )
   })
@@ -59,6 +89,7 @@ function handleLoginSubmit(e) {
     userObj = {}
     userObj = user
     loginName.value = ''
+    loginPassword.value = ''
     document.body.classList.remove("showLoginForm");
     parseUserObj()
   })
@@ -70,7 +101,13 @@ function openLoginForm(){
 
 
 function fetchNeighborhoodList (){
-  fetch('http://localhost:3000/neighborhoods')
+  fetch(`${url}neighborhoods`,{
+    method: 'GET',
+    withCredentials: true,
+    headers: {
+      'Authorization': sessionStorage.getItem('token')
+    }
+  })
   .then(function(resp){
     return resp.json()
   })
@@ -92,7 +129,13 @@ function populateNeighborhoodList(neighborhoods) {
 }
 
 function fetchCuisineList (){
-  fetch('http://localhost:3000/cuisines')
+  fetch(`${url}cuisines`,{
+    method: 'GET',
+    withCredentials: true,
+    headers: {
+      'Authorization': sessionStorage.getItem('token')
+    }
+  })
   .then(function(resp){
     return resp.json()
   })
@@ -152,6 +195,7 @@ function handleRestaurantSelection(e) {
 }
 
 function populateRestaurantInfo(restaurant){
+
   restaurantInfoPopup.innerHTML += `
 
       <h3>${restaurant.name}</h3>
@@ -187,11 +231,13 @@ function handleRestaurantButtons(e) {
 }
 
 function visitRestaurant(id,userObj) {
-  fetch(`http://localhost:3000/users/${userObj.id}`,{
+
+  fetch(`${url}users/${userObj.id}`,{
     method: 'PATCH',
     headers: {
       "Content-Type": "application/json",
-      "Accept": "application/json"
+      "Accept": "application/json",
+      "Authorization": sessionStorage.getItem('token')
     },
     body: JSON.stringify(
       {
@@ -201,7 +247,7 @@ function visitRestaurant(id,userObj) {
   })
   .then(function(resp){
     visited()
-    handleLoginSubmit()
+    fetchLoginData()
     fetchRestaurants()
   })
 }
@@ -239,6 +285,8 @@ function logout() {
   restaurantResults.innerHTML = ''
   historyResults.innerHTML = ''
   restaurantAdapter.destroyAllRestaurants()
+  loginPassword.value = ''
+  sessionStorage.clear()
   home()
   openLoginForm()
 }
@@ -254,7 +302,6 @@ function showHistory() {
   searchBar.style.visibility = 'hidden'
   restaurantResults.innerHTML = ''
   let i = 1
-  // debugger
   for (const [neighborhood, information] of Object.entries(neighborhoodObj)) {
     historyResults.innerHTML += `
     <div class='neighborhood'>
@@ -268,9 +315,6 @@ function showHistory() {
       let classToAdd = ''
       let neighborhoodId = gridElements[i].previousElementSibling.children[0].dataset.entityId
       let neighborhoodDbId = gridElements[i].previousElementSibling.children[0].dataset.dbId
-      if (neighborhoodDbId == 135) {
-        // debugger
-      }
       if (userObj.neighborhoodCuisines[neighborhoodDbId] && userObj.neighborhoodCuisines[neighborhoodDbId].includes(id)) {
         classToAdd = 'visited'
       }
@@ -286,6 +330,7 @@ function showHistory() {
 }
 
 function parseUserObj() {
+
   delete userObj.neighborhoodCuisines
   neighborhoodCuisineObj = {}
   userObj.user_restaurants.forEach(function(user_restaurant){

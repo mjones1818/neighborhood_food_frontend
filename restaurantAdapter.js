@@ -11,18 +11,30 @@ class RestaurantAdapter {
       search['entity_id'] = neighborhoodSelection.value
       search['cuisine_id'] = cuisineSelection.value
     }
-    let url = `${this.baseURL}/restaurants?`
+    let url = `${this.baseURL}restaurants?`
     for (const [key, value] of Object.entries(search))  {
       url += `${key}=${value}&`
     }
-    return fetch(url)
+    return fetch(url,{
+      method: 'GET',
+      withCredentials: true,
+      headers: {
+        'Authorization': sessionStorage.getItem('token')
+      }
+    })
     .then(function(resp){
       return resp.json()
     })
   }
 
   handleRestaurantSelection(dbId) {
-    return fetch(`${this.baseURL}restaurants/${dbId}`)
+    return fetch(`${this.baseURL}restaurants/${dbId}`,{
+      method: 'GET',
+      withCredentials: true,
+      headers: {
+        'Authorization': sessionStorage.getItem('token')
+      }
+    })
     .then(function(resp){
       return resp.json()
     })
@@ -31,6 +43,10 @@ class RestaurantAdapter {
   destroyAllRestaurants() {
     fetch(`${this.baseURL}restaurants`,{
     method: 'DELETE',
+    withCredentials: true,
+    headers: {
+      'Authorization': sessionStorage.getItem('token')
+    }
     })
   }
 }
