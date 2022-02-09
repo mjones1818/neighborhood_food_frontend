@@ -20,6 +20,7 @@ let userObj = {}
 let neighborhoodCuisineObj = {}
 let shuffleButton = document.getElementById('shuffle')
 let shuffleNav = document.getElementById('shuffle-nav')
+let loginError = document.getElementsByClassName('login-error')[0]
 let url = 'https://neighborhood-food.herokuapp.com/'
 // let url = 'http://localhost:3000/'
 const restaurantAdapter = new RestaurantAdapter(url)
@@ -60,10 +61,15 @@ function handleLoginSubmit(e) {
     return resp.json()
   })
   .then(function(user){
-    sessionStorage.setItem('token', user.token)
-    userObj = {}
-    userObj['name'] = user.username
-    fetchLoginData()
+    if (user.error) {
+      loginError.style.display = 'block'
+    } else {
+      loginError.style.display = 'none'
+      sessionStorage.setItem('token', user.token)
+      userObj = {}
+      userObj['name'] = user.username
+      fetchLoginData()
+    }
   })
 }
 

@@ -256,3 +256,8 @@ select {
 #history-info > div {
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 }
+
+.login-error h3 {
+  color: red;
+  text-align: center;
+}
