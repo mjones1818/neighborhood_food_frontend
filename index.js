@@ -63,6 +63,8 @@ function handleLoginSubmit(e) {
   .then(function(user){
     if (user.error) {
       loginError.style.display = 'block'
+      loginName.value = ''
+      loginPassword.value = ''
     } else {
       loginError.style.display = 'none'
       sessionStorage.setItem('token', user.token)
