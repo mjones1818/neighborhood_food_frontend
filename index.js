@@ -24,7 +24,9 @@ let loginError = document.getElementsByClassName('login-error')[0]
 let url = 'https://neighborhood-food.herokuapp.com/'
 // let url = 'http://localhost:3000/'
 const restaurantAdapter = new RestaurantAdapter(url)
-
+function testEnvironment() {
+  console.log(env)
+}
 openLoginForm()
 fetchNeighborhoodList()
 fetchCuisineList()
