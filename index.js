@@ -21,20 +21,20 @@ let neighborhoodCuisineObj = {}
 let shuffleButton = document.getElementById('shuffle')
 let shuffleNav = document.getElementById('shuffle-nav')
 let loginError = document.getElementsByClassName('login-error')[0]
-let setUrl = function() {
+let setUrl = () => {
   if (window.location.href.includes('file')) {
-    let url = 'http://localhost:3000/'
+    return 'http://localhost:3000/'
   } else {
-    let url = 'https://neighborhood-food.herokuapp.com/'
+    return 'https://neighborhood-food.herokuapp.com/'
   }
-} 
-
-// 
+}
+// let url = 'https://neighborhood-food.herokuapp.com/'
+// let url = 'http://localhost:3000/'
+let url = setUrl()
 const restaurantAdapter = new RestaurantAdapter(url)
 function testEnvironment() {
   console.log(env)
 }
-setUrl()
 openLoginForm()
 fetchNeighborhoodList()
 fetchCuisineList()
