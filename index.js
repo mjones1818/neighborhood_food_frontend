@@ -44,7 +44,7 @@ let setUrl = async () => {
   }
 }
 
-let url = setUrl()
+let url = await setUrl()
   .then(url => console.log(url))
   .catch(error => console.error(error));
 
