@@ -36,7 +36,7 @@ let loginError = document.getElementsByClassName('login-error')[0]
 //   console.log(response.url[0])
 //   return response.url[0]
 // }
-let setUrl = async () => {
+async function setUrl() {
   if (window.location.href.includes('file')) {
     return 'http://localhost:3000/'
   } else {
@@ -44,9 +44,16 @@ let setUrl = async () => {
   }
 }
 
-let url = await setUrl()
-  .then(url => console.log(url))
-  .catch(error => console.error(error));
+async function main() {
+  try {
+    const url = await setUrl();
+    console.log(url);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+main();
 
 async function getUrl() {
   try {
@@ -58,6 +65,7 @@ async function getUrl() {
     return error;
   }
 }
+
 
 // let url = 'https://neighborhood-food.herokuapp.com/'
 // let url = 'http://localhost:3000/'
