@@ -25,9 +25,18 @@ let setUrl = () => {
   if (window.location.href.includes('file')) {
     return 'http://localhost:3000/'
   } else {
-    return 'https://6791-207-237-249-34.ngrok.io/'
+    return getUrl()
   }
 }
+
+const getUrl = () => {
+  fetch('https://script.google.com/macros/s/AKfycbx1v67vtevyZCFYzlyKfKsgu6Dd9X47EBKXNFtQMz5oEK7sepmSxEUKCCqRv-RQzTwf/exec',{
+
+  }).then(function(resp){
+    console.log(resp)
+  })
+}
+
 // let url = 'https://neighborhood-food.herokuapp.com/'
 // let url = 'http://localhost:3000/'
 let url = setUrl()
