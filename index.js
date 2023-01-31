@@ -36,6 +36,7 @@ let loginError = document.getElementsByClassName('login-error')[0]
 //   console.log(response.url[0])
 //   return response.url[0]
 // }
+const url = ''
 async function setUrl() {
   if (window.location.href.includes('file')) {
     return 'http://localhost:3000/'
