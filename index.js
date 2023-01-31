@@ -25,24 +25,27 @@ let setUrl = () => {
   if (window.location.href.includes('file')) {
     return 'http://localhost:3000/'
   } else {
-    testurl()
+    
     return getUrl()
   }
 }
 
-const getUrl = () => {
-  fetch('https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhuMyOActGzBw591bDIldMfcKCwEdfz4Ze99W7yL3Tbak5jfjoNRkjEa/exec',{
+// const getUrl = () => {
+//   fetch('https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhuMyOActGzBw591bDIldMfcKCwEdfz4Ze99W7yL3Tbak5jfjoNRkjEa/exec',{
 
-  }).then(function(resp){
-    resp.json()
-  }).then(function(data){
-    return data.url
-  })
-}
+//   }).then(function(resp){
+//     resp.json()
+//   }).then(function(data){
+//     return data.url
+//   })
+// }
 
-function testurl() {fetch('https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhuMyOActGzBw591bDIldMfcKCwEdfz4Ze99W7yL3Tbak5jfjoNRkjEa/exec')
+function getUrl() {fetch('https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhuMyOActGzBw591bDIldMfcKCwEdfz4Ze99W7yL3Tbak5jfjoNRkjEa/exec')
   .then(response => response.json())
-  .then(data => console.log(data.url[0]))
+  .then(data => {
+    console.log(data.url[0])
+    return data.url[0]
+  })
   .catch(error => console.error(error));
 }
 
