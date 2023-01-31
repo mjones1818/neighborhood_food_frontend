@@ -28,9 +28,9 @@ let setUrl = () => {
     return getUrl()
   }
 }
-let url = await setUrl()
+let url = setUrl()
 
-async function getUrl() {fetch('https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhuMyOActGzBw591bDIldMfcKCwEdfz4Ze99W7yL3Tbak5jfjoNRkjEa/exec')
+async function getUrl() {await fetch('https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhuMyOActGzBw591bDIldMfcKCwEdfz4Ze99W7yL3Tbak5jfjoNRkjEa/exec')
   .then(response => response.json())
   .then(data => {
     console.log(data.url[0])
