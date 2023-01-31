@@ -25,7 +25,7 @@ let setUrl = () => {
   if (window.location.href.includes('file')) {
     return 'http://localhost:3000/'
   } else {
-    return 'https://6791-207-237-249-34.ngrok.io'
+    return 'https://6791-207-237-249-34.ngrok.io/'
   }
 }
 // let url = 'https://neighborhood-food.herokuapp.com/'
