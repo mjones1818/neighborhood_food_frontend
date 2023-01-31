@@ -30,7 +30,7 @@ let setUrl = () => {
 }
 
 const getUrl = () => {
-  fetch('https://script.google.com/macros/s/AKfycbx1v67vtevyZCFYzlyKfKsgu6Dd9X47EBKXNFtQMz5oEK7sepmSxEUKCCqRv-RQzTwf/exec',{
+  fetch('https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhuMyOActGzBw591bDIldMfcKCwEdfz4Ze99W7yL3Tbak5jfjoNRkjEa/exec',{
 
   }).then(function(resp){
     console.log(resp)
