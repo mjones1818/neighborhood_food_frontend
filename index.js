@@ -36,40 +36,21 @@ let loginError = document.getElementsByClassName('login-error')[0]
 //   console.log(response.url[0])
 //   return response.url[0]
 // }
-const url = ''
+
+let url;
+
 async function setUrl() {
-  if (window.location.href.includes('file')) {
-    return 'http://localhost:3000/'
+  if (window.location.href.includes("file")) {
+    url = "http://localhost:3000/";
   } else {
-    return await getUrl()
-  }
-}
-
-async function main() {
-  try {
-    const url = await setUrl();
-    console.log(url);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-main();
-
-async function getUrl() {
-  try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhuMyOActGzBw591bDIldMfcKCwEdfz4Ze99W7yL3Tbak5jfjoNRkjEa/exec');
+    const response = await fetch("https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhuMyOActGzBw591bDIldMfcKCwEdfz4Ze99W7yL3Tbak5jfjoNRkjEa/exec");
     const data = await response.json();
-    return data.url[0];
-  } catch (error) {
-    console.error(error);
-    return error;
+    url = data.url[0];
   }
 }
 
+setUrl();
 
-// let url = 'https://neighborhood-food.herokuapp.com/'
-// let url = 'http://localhost:3000/'
 const restaurantAdapter = new RestaurantAdapter(url)
 function testEnvironment() {
   console.log(env)
