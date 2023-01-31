@@ -25,22 +25,12 @@ let setUrl = () => {
   if (window.location.href.includes('file')) {
     return 'http://localhost:3000/'
   } else {
-    
     return getUrl()
   }
 }
+let url = await setUrl()
 
-// const getUrl = () => {
-//   fetch('https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhuMyOActGzBw591bDIldMfcKCwEdfz4Ze99W7yL3Tbak5jfjoNRkjEa/exec',{
-
-//   }).then(function(resp){
-//     resp.json()
-//   }).then(function(data){
-//     return data.url
-//   })
-// }
-
-function getUrl() {fetch('https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhuMyOActGzBw591bDIldMfcKCwEdfz4Ze99W7yL3Tbak5jfjoNRkjEa/exec')
+async function getUrl() {fetch('https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhuMyOActGzBw591bDIldMfcKCwEdfz4Ze99W7yL3Tbak5jfjoNRkjEa/exec')
   .then(response => response.json())
   .then(data => {
     console.log(data.url[0])
@@ -51,7 +41,6 @@ function getUrl() {fetch('https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhu
 
 // let url = 'https://neighborhood-food.herokuapp.com/'
 // let url = 'http://localhost:3000/'
-let url = setUrl()
 const restaurantAdapter = new RestaurantAdapter(url)
 function testEnvironment() {
   console.log(env)
