@@ -32,7 +32,7 @@ let url = setUrl()
 
 async function getUrl() {
   let urlResponse = await fetch('https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhuMyOActGzBw591bDIldMfcKCwEdfz4Ze99W7yL3Tbak5jfjoNRkjEa/exec')
-  let response = urlResponse.json()
+  let response = await urlResponse.json()
   console.log(response.url)
   return response.url
 }
