@@ -21,20 +21,42 @@ let neighborhoodCuisineObj = {}
 let shuffleButton = document.getElementById('shuffle')
 let shuffleNav = document.getElementById('shuffle-nav')
 let loginError = document.getElementsByClassName('login-error')[0]
-let setUrl = () => {
+// let setUrl = () => {
+//   if (window.location.href.includes('file')) {
+//     return 'http://localhost:3000/'
+//   } else {
+//     return getUrl()
+//   }
+// }
+// let url = setUrl()
+
+// async function getUrl() {
+//   let urlResponse = await fetch('https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhuMyOActGzBw591bDIldMfcKCwEdfz4Ze99W7yL3Tbak5jfjoNRkjEa/exec')
+//   let response = await urlResponse.json()
+//   console.log(response.url[0])
+//   return response.url[0]
+// }
+let setUrl = async () => {
   if (window.location.href.includes('file')) {
     return 'http://localhost:3000/'
   } else {
-    return getUrl()
+    return await getUrl()
   }
 }
+
 let url = setUrl()
+  .then(url => console.log(url))
+  .catch(error => console.error(error));
 
 async function getUrl() {
-  let urlResponse = await fetch('https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhuMyOActGzBw591bDIldMfcKCwEdfz4Ze99W7yL3Tbak5jfjoNRkjEa/exec')
-  let response = await urlResponse.json()
-  console.log(response.url)
-  return response.url
+  try {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbxu1S3vQ1oWqhuMyOActGzBw591bDIldMfcKCwEdfz4Ze99W7yL3Tbak5jfjoNRkjEa/exec');
+    const data = await response.json();
+    return data.url[0];
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
 }
 
 // let url = 'https://neighborhood-food.herokuapp.com/'
