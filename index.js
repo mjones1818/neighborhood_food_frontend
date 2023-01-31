@@ -49,15 +49,18 @@ async function setUrl() {
   }
 }
 
-setUrl();
+// setUrl();
 
 const restaurantAdapter = new RestaurantAdapter(url)
 function testEnvironment() {
   console.log(env)
 }
 openLoginForm()
-fetchNeighborhoodList()
-fetchCuisineList()
+
+setUrl().then(()=> {
+  fetchNeighborhoodList()
+  fetchCuisineList()
+})
 
 restaurantSearch.addEventListener('click', fetchRestaurants)
 loginButton.addEventListener('click', handleLoginSubmit)
