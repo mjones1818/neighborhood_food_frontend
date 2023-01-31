@@ -51,13 +51,15 @@ async function setUrl() {
 
 // setUrl();
 
-const restaurantAdapter = new RestaurantAdapter(url)
+let restaurantAdapter;
+//unknown function
 function testEnvironment() {
   console.log(env)
 }
 openLoginForm()
 
 setUrl().then(()=> {
+  restaurantAdapter = new RestaurantAdapter(url)
   fetchNeighborhoodList()
   fetchCuisineList()
 })
